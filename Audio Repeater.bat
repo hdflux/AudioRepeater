@@ -49,10 +49,14 @@ set sr[2]=48000
 
 
 echo Set Audio Repeater to which device?
-echo 1. Speakers
-echo 2. Headphones
-choice /t 10 /c 12 /n /d 1
+echo 1. Speakers.
+echo 2. Headphones.
+echo 3. Close all instances of Audio Repeater.
+echo 4. Quit.
+choice /t 10 /c 1234 /n /d 1
 
+if errorlevel 4 goto :end
+if errorlevel 3 goto :gc
 if errorlevel 2 goto :headphones
 if errorlevel 1 goto :speakers
 
@@ -62,7 +66,7 @@ if errorlevel 1 goto :speakers
 set out=Speakers (Realtek High Definiti
 echo.
 echo Repeating audio to speakers on device %out%...
-goto :end
+goto :gc
 
 
 :headphones
@@ -70,15 +74,20 @@ goto :end
 set out=Line (MG-XU)
 echo.
 echo Repeating audio to headphones on device %out%...
-goto :end
+goto :gc
 
 
-:end
+:gc
 
 echo Shutting down any active audio repeaters...
 taskkill /fi "WindowTitle eq %wn[0]%" > nul
 taskkill /fi "WindowTitle eq %wn[1]%" > nul
 taskkill /fi "WindowTitle eq %wn[2]%" > nul
+
+if not defined out goto :end
+
+
+:createinstances
 
 start /min "%wn[0]%" "%srcdir%\audiorepeater.exe" /Input: "%input[0]%" /Output: "%out%" /SamplingRate:%sr[0]% /BitsPerSample:%bps[0]% /Channels:%ch% /BufferMs:%bufferms[0]% /BufferParts:%bufferparts[0]% /Prefill:%prefill[0]% /ResyncAt:%resync[0]% /Priority:%priority% /ChanCfg:%chcfg% /WindowName:"%wn[0]%" %autostart%
 echo Audio Repeater created for %wn[0]%.
@@ -86,5 +95,8 @@ start /min "%wn[1]%" "%srcdir%\audiorepeater.exe" /Input: "%input[1]%" /Output: 
 echo Audio Repeater created for %wn[1]%.
 start /min "%wn[2]%" "%srcdir%\audiorepeater.exe" /Input: "%input[2]%" /Output: "%out%" /SamplingRate:%sr[2]% /BitsPerSample:%bps[2]% /Channels:%ch% /BufferMs:%bufferms[2]% /BufferParts:%bufferparts[2]% /Prefill:%prefill[2]% /ResyncAt:%resync[2]% /Priority:%priority% /ChanCfg:%chcfg% /WindowName:"%wn[2]%" %autostart%
 echo Audio Repeater created for %wn[2]%.
+
+
+:end
 
 timeout /t 5
