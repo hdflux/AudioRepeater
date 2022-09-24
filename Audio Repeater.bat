@@ -18,7 +18,7 @@ REM More bufferparts mean more accuracy in buffer but can create more overhead.
 
 REM srcdir	-- Location of audiorepeater.exe.
 set srcdir=H:\Apps\Virtual Audio Cable
-set priority=normal
+set priority=high
 set ch=2
 set chcfg=stereo
 set autostart=/AutoStart
@@ -28,8 +28,8 @@ set input[0]=Line 1 (Virtual Audio Cable)
 set resync[0]=20
 set prefill[0]=70
 set bufferparts[0]=10
-set bufferms[0]=400
-set bps[0]=24
+set bufferms[0]=100
+set bps[0]=16
 set sr[0]=48000
 
 set wn[1]=Audio Repeater Line 2 Game
@@ -37,8 +37,8 @@ set input[1]=Line 2 (Virtual Audio Cable)
 set resync[1]=20
 set prefill[1]=70
 set bufferparts[1]=10
-set bufferms[1]=400
-set bps[1]=24
+set bufferms[1]=100
+set bps[1]=16
 set sr[1]=48000
 
 set wn[2]=Audio Repeater Line 3 Voice Chat
@@ -46,8 +46,8 @@ set input[2]=Line 3 (Virtual Audio Cable)
 set resync[2]=20
 set prefill[2]=70
 set bufferparts[2]=10
-set bufferms[2]=400
-set bps[2]=24
+set bufferms[2]=100
+set bps[2]=16
 set sr[2]=48000
 
 

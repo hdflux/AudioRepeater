@@ -19,13 +19,13 @@ REM More bufferparts mean more accuracy in buffer but can create more overhead.
 REM srcdir	-- Location of audiorepeater.exe.
 
 
-set scriptDir=H:\Apps\Virtual Audio Cable
+set scriptDir=H:\Data\Installs\vac467full\x64
 set samplingRate=48000
 set bitsPerSample=16
 set numChannels=2
 set channelConfig=stereo
-set totalBuffer=200
-set numBuffers=8
+set totalBuffer=100
+set numBuffers=64
 set bufferPrefillPercent=50
 set bufferReSyncPrecent=20
 set cpuPriority=high
