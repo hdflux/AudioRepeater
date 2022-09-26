@@ -30,29 +30,29 @@ set windowName[0]=Audio Repeater - Line 1 - System Sounds
 set input[0]=Virtual Cable 1
 set resyncAt[0]=20
 set outputPreFill[0]=50
-set buffers[0]=16
-set bufferMs[0]=100
+set buffers[0]=12
+set bufferMs[0]=200
 
 set windowName[1]=Audio Repeater - Line 2 - Game
 set input[1]=Virtual Cable 2
 set resyncAt[1]=20
 set outputPreFill[1]=50
-set buffers[1]=16
-set bufferMs[1]=100
+set buffers[1]=12
+set bufferMs[1]=200
 
 set windowName[2]=Audio Repeater - Line 3 - Voice Chat
 set input[2]=Virtual Cable 3
 set resyncAt[2]=20
 set outputPreFill[2]=50
-set buffers[2]=16
-set bufferMs[2]=100
+set buffers[2]=12
+set bufferMs[2]=200
 
 set windowName[3]=Audio Repeater - Line 4 - Line To Device
 set input[3]=Virtual Cable 4
 set resyncAt[3]=20
 set outputPreFill[3]=50
-set buffers[3]=16
-set bufferMs[3]=300
+set buffers[3]=12
+set bufferMs[3]=600
 
 
 echo Set Audio Repeater to which device?
