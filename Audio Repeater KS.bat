@@ -23,6 +23,8 @@ set scriptDir=H:\Data\Installs\vac467full\x64
 set channels=2
 set chanCfg=stereo
 set priority=high
+REM set min=
+set min=/min
 set autoStart=/AutoStart
 
 
@@ -31,28 +33,28 @@ set input[0]=Virtual Cable 1
 set resyncAt[0]=20
 set outputPreFill[0]=50
 set buffers[0]=12
-set bufferMs[0]=200
+set bufferMs[0]=100
 
 set windowName[1]=Audio Repeater - Line 2 - Game
 set input[1]=Virtual Cable 2
 set resyncAt[1]=20
 set outputPreFill[1]=50
 set buffers[1]=12
-set bufferMs[1]=200
+set bufferMs[1]=100
 
 set windowName[2]=Audio Repeater - Line 3 - Voice Chat
 set input[2]=Virtual Cable 3
 set resyncAt[2]=20
 set outputPreFill[2]=50
 set buffers[2]=12
-set bufferMs[2]=200
+set bufferMs[2]=100
 
 set windowName[3]=Audio Repeater - Line 4 - Line To Device
 set input[3]=Virtual Cable 4
 set resyncAt[3]=20
 set outputPreFill[3]=50
-set buffers[3]=12
-set bufferMs[3]=600
+set buffers[3]=16
+set bufferMs[3]=1000
 
 
 echo Set Audio Repeater to which device?
@@ -123,16 +125,16 @@ if not defined output goto :end
 
 :createinstances
 
-start /min "%windowName[3]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[3]%" /Output:"%output%" /SamplingRate:%samplingRate[3]% /BitsPerSample:%bitsPerSample[3]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[3]% /Buffers:%buffers[3]% /OutputPreFill:%outputPreFill[3]% /ResyncAt:%resyncAt[3]% /WindowName:"%windowName[3]%" /Priority:%priority% %autoStart%
+start %min% "%windowName[3]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[3]%" /Output:"%output%" /SamplingRate:%samplingRate[3]% /BitsPerSample:%bitsPerSample[3]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[3]% /Buffers:%buffers[3]% /OutputPreFill:%outputPreFill[3]% /ResyncAt:%resyncAt[3]% /WindowName:"%windowName[3]%" /Priority:%priority% %autoStart%
 echo Audio Repeater created for %windowName[3]%.
 
-start /min "%windowName[0]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[0]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[0]% /BitsPerSample:%bitsPerSample[0]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[0]% /Buffers:%buffers[0]% /OutputPreFill:%outputPreFill[0]% /ResyncAt:%resyncAt[0]% /WindowName:"%windowName[0]%" /Priority:%priority% %autoStart%
+start %min% "%windowName[0]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[0]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[0]% /BitsPerSample:%bitsPerSample[0]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[0]% /Buffers:%buffers[0]% /OutputPreFill:%outputPreFill[0]% /ResyncAt:%resyncAt[0]% /WindowName:"%windowName[0]%" /Priority:%priority% %autoStart%
 echo Audio Repeater created for %windowName[0]%.
 
-start /min "%windowName[1]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[1]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[1]% /BitsPerSample:%bitsPerSample[1]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[1]% /Buffers:%buffers[1]% /OutputPreFill:%outputPreFill[1]% /ResyncAt:%resyncAt[1]% /WindowName:"%windowName[1]%" /Priority:%priority% %autoStart%
+start %min% "%windowName[1]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[1]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[1]% /BitsPerSample:%bitsPerSample[1]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[1]% /Buffers:%buffers[1]% /OutputPreFill:%outputPreFill[1]% /ResyncAt:%resyncAt[1]% /WindowName:"%windowName[1]%" /Priority:%priority% %autoStart%
 echo Audio Repeater created for %windowName[1]%.
 
-start /min "%windowName[2]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[2]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[2]% /BitsPerSample:%bitsPerSample[2]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[2]% /Buffers:%buffers[2]% /OutputPreFill:%outputPreFill[2]% /ResyncAt:%resyncAt[2]% /WindowName:"%windowName[2]%" /Priority:%priority% %autoStart%
+start %min% "%windowName[2]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[2]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[2]% /BitsPerSample:%bitsPerSample[2]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[2]% /Buffers:%buffers[2]% /OutputPreFill:%outputPreFill[2]% /ResyncAt:%resyncAt[2]% /WindowName:"%windowName[2]%" /Priority:%priority% %autoStart%
 echo Audio Repeater created for %windowName[2]%.
 
 
