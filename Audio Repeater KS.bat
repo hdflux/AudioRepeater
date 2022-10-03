@@ -22,39 +22,55 @@ REM srcdir	-- Location of audiorepeater_ks.exe.
 set scriptDir=H:\Data\Installs\vac467full\x64
 set channels=2
 set chanCfg=stereo
-set priority=high
-REM set min=
-set min=/min
 set autoStart=/AutoStart
 
 
-set windowName[0]=Audio Repeater - Line 1 - System Sounds
-set input[0]=Virtual Cable 1
-set resyncAt[0]=20
-set outputPreFill[0]=50
-set buffers[0]=12
-set bufferMs[0]=100
+set vac[0].WindowName=Audio Repeater - Line 1 - System Sounds
+set vac[0].Input=Virtual Cable 1
+set vac[0].Output=Virtual Cable 4
+set vac[0].ResyncAt=20
+set vac[0].OutputPreFill=50
+set vac[0].Buffers=16
+set vac[0].BufferMs=400
+set vac[0].PacketModeIn=off
+set vac[0].PacketModeOut=off
+set vac[0].Priority=normal
+set vac[0].Min=/min
 
-set windowName[1]=Audio Repeater - Line 2 - Game
-set input[1]=Virtual Cable 2
-set resyncAt[1]=20
-set outputPreFill[1]=50
-set buffers[1]=12
-set bufferMs[1]=100
+set vac[1].WindowName=Audio Repeater - Line 2 - Game
+set vac[1].Input=Virtual Cable 2
+set vac[1].Output=Virtual Cable 4
+set vac[1].ResyncAt=20
+set vac[1].OutputPreFill=50
+set vac[1].Buffers=16
+set vac[1].BufferMs=400
+set vac[1].PacketModeIn=off
+set vac[1].PacketModeOut=off
+set vac[1].Priority=normal
+set vac[1].Min=/min
 
-set windowName[2]=Audio Repeater - Line 3 - Voice Chat
-set input[2]=Virtual Cable 3
-set resyncAt[2]=20
-set outputPreFill[2]=50
-set buffers[2]=12
-set bufferMs[2]=100
+set vac[2].WindowName=Audio Repeater - Line 3 - Voice Chat
+set vac[2].Input=Virtual Cable 3
+set vac[2].Output=Virtual Cable 4
+set vac[2].ResyncAt=20
+set vac[2].OutputPreFill=50
+set vac[2].Buffers=16
+set vac[2].BufferMs=400
+set vac[2].PacketModeIn=off
+set vac[2].PacketModeOut=off
+set vac[2].Priority=normal
+set vac[2].Min=/min
 
-set windowName[3]=Audio Repeater - Line 4 - Line To Device
-set input[3]=Virtual Cable 4
-set resyncAt[3]=20
-set outputPreFill[3]=50
-set buffers[3]=16
-set bufferMs[3]=1000
+set vac[3].WindowName=Audio Repeater - Line 4 - Line To Device
+set vac[3].Input=Virtual Cable 4
+set vac[3].ResyncAt=20
+set vac[3].OutputPreFill=50
+set vac[3].Buffers=16
+set vac[3].BufferMs=400
+set vac[3].PacketModeIn=off
+set vac[3].PacketModeOut=off
+set vac[3].Priority=normal
+set vac[3].Min=
 
 
 echo Set Audio Repeater to which device?
@@ -72,70 +88,64 @@ if errorlevel 1 goto :speakers
 
 :speakers
 
-set output=Realtek HD Audio Output
+set vac[3].Output=Realtek HD Audio Output
 
-set bitsPerSample[0]=16
-set bitsPerSample[1]=16
-set bitsPerSample[2]=16
-set bitsPerSample[3]=16
+set vac[0].BitsPerSample=16
+set vac[1].BitsPerSample=16
+set vac[2].BitsPerSample=16
+set vac[3].BitsPerSample=16
 
-set samplingRate[0]=96000
-set samplingRate[1]=96000
-set samplingRate[2]=96000
-set samplingRate[3]=96000
+set vac[0].SamplingRate=48000
+set vac[1].SamplingRate=48000
+set vac[2].SamplingRate=48000
+set vac[3].SamplingRate=48000
 
 echo.
-echo Repeating audio to speakers on device %output%...
+echo Repeating audio to speakers on device %vac[3].Output%...
 goto :gc
 
 
 :headphones
 
-set output=MG-XU-1
+set vac[3].Output=MG-XU-1
 
-set bitsPerSample[0]=24
-set bitsPerSample[1]=24
-set bitsPerSample[2]=24
-set bitsPerSample[3]=24
+set vac[0].BitsPerSample=24
+set vac[1].BitsPerSample=24
+set vac[2].BitsPerSample=24
+set vac[3].BitsPerSample=24
 
-set samplingRate[0]=48000
-set samplingRate[1]=48000
-set samplingRate[2]=48000
-set samplingRate[3]=48000
+set vac[0].SamplingRate=44100
+set vac[1].SamplingRate=44100
+set vac[2].SamplingRate=44100
+set vac[3].SamplingRate=44100
 
 echo.
-echo Repeating audio to headphones on device %output%...
+echo Repeating audio to headphones on device %vac[3].Output%...
 goto :gc
 
 
 :gc
 
 echo Shutting down any active audio repeaters...
-REM start "%scriptDir%\audiorepeater_ks.exe" /CloseInstance:"%windowName[0]%"
-REM start "%scriptDir%\audiorepeater_ks.exe" /CloseInstance:"%windowName[1]%"
-REM start "%scriptDir%\audiorepeater_ks.exe" /CloseInstance:"%windowName[2]%"
-REM start "%scriptDir%\audiorepeater_ks.exe" /CloseInstance:"%windowName[3]%"
-taskkill /fi "WindowTitle eq %windowName[0]%" > nul
-taskkill /fi "WindowTitle eq %windowName[1]%" > nul
-taskkill /fi "WindowTitle eq %windowName[2]%" > nul
-taskkill /fi "WindowTitle eq %windowName[3]%" > nul
+for /L %%i in (0, 1, 3) do call taskkill /fi "WindowTitle eq %%vac[%%i].WindowName%%" > nul
 
-if not defined output goto :end
+if not defined vac[3].Output goto :end
 
 
 :createinstances
 
-start %min% "%windowName[3]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[3]%" /Output:"%output%" /SamplingRate:%samplingRate[3]% /BitsPerSample:%bitsPerSample[3]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[3]% /Buffers:%buffers[3]% /OutputPreFill:%outputPreFill[3]% /ResyncAt:%resyncAt[3]% /WindowName:"%windowName[3]%" /Priority:%priority% %autoStart%
-echo Audio Repeater created for %windowName[3]%.
-
-start %min% "%windowName[0]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[0]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[0]% /BitsPerSample:%bitsPerSample[0]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[0]% /Buffers:%buffers[0]% /OutputPreFill:%outputPreFill[0]% /ResyncAt:%resyncAt[0]% /WindowName:"%windowName[0]%" /Priority:%priority% %autoStart%
-echo Audio Repeater created for %windowName[0]%.
-
-start %min% "%windowName[1]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[1]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[1]% /BitsPerSample:%bitsPerSample[1]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[1]% /Buffers:%buffers[1]% /OutputPreFill:%outputPreFill[1]% /ResyncAt:%resyncAt[1]% /WindowName:"%windowName[1]%" /Priority:%priority% %autoStart%
-echo Audio Repeater created for %windowName[1]%.
-
-start %min% "%windowName[2]%" "%scriptDir%\audiorepeater_ks.exe" /Input:"%input[2]%" /Output:"Virtual Cable 4" /SamplingRate:%samplingRate[2]% /BitsPerSample:%bitsPerSample[2]% /Channels:%channels% /ChanCfg:%chanCfg% /BufferMs:%bufferMs[2]% /Buffers:%buffers[2]% /OutputPreFill:%outputPreFill[2]% /ResyncAt:%resyncAt[2]% /WindowName:"%windowName[2]%" /Priority:%priority% %autoStart%
-echo Audio Repeater created for %windowName[2]%.
+for /L %%i in (0, 1, 3) do (
+	call start %%vac[%%i].Min%% "%%vac[%%i].WindowName%%" "%%scriptDir%%\audiorepeater_ks.exe"^
+	 /Input:"%%vac[%%i].Input%%" /Output:"%%vac[%%i].Output%%"^
+	 /SamplingRate:%%vac[%%i].SamplingRate%% /BitsPerSample:%%vac[%%i].BitsPerSample%%^
+	 /Channels:%%channels%% /ChanCfg:%%chanCfg%%^
+	 /BufferMs:%%vac[%%i].BufferMs%% /Buffers:%%vac[%%i].Buffers%%^
+	 /ResyncAt:%%vac[%%i].ResyncAt%% /OutputPreFill:%%vac[%%i].OutputPreFill%%^
+	 /PacketModeIn:%%vac[%%i].PacketModeIn%% /PacketModeOut:%%vac[%%i].PacketModeOut%%^
+	 /WindowName:"%%vac[%%i].WindowName%%"^
+	 /Priority:%%vac[%%i].Priority%% %%autoStart%%
+	call echo Audio Repeater created for %%vac[%%i].WindowName%%.
+)
 
 
 :end
