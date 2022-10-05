@@ -31,7 +31,7 @@ set vac[0].Output=Virtual Cable 4
 set vac[0].ResyncAt=20
 set vac[0].OutputPreFill=50
 set vac[0].Buffers=16
-set vac[0].BufferMs=400
+set vac[0].BufferMs=200
 set vac[0].PacketModeIn=off
 set vac[0].PacketModeOut=off
 set vac[0].Priority=normal
@@ -43,7 +43,7 @@ set vac[1].Output=Virtual Cable 4
 set vac[1].ResyncAt=20
 set vac[1].OutputPreFill=50
 set vac[1].Buffers=16
-set vac[1].BufferMs=400
+set vac[1].BufferMs=200
 set vac[1].PacketModeIn=off
 set vac[1].PacketModeOut=off
 set vac[1].Priority=normal
@@ -55,7 +55,7 @@ set vac[2].Output=Virtual Cable 4
 set vac[2].ResyncAt=20
 set vac[2].OutputPreFill=50
 set vac[2].Buffers=16
-set vac[2].BufferMs=400
+set vac[2].BufferMs=200
 set vac[2].PacketModeIn=off
 set vac[2].PacketModeOut=off
 set vac[2].Priority=normal
@@ -66,7 +66,7 @@ set vac[3].Input=Virtual Cable 4
 set vac[3].ResyncAt=20
 set vac[3].OutputPreFill=50
 set vac[3].Buffers=16
-set vac[3].BufferMs=400
+set vac[3].BufferMs=200
 set vac[3].PacketModeIn=off
 set vac[3].PacketModeOut=off
 set vac[3].Priority=normal
@@ -102,12 +102,13 @@ set vac[3].SamplingRate=48000
 
 echo.
 echo Repeating audio to speakers on device %vac[3].Output%...
+echo Remember to change clock corr ratio to 100 on Cable 4.
 goto :gc
 
 
 :headphones
 
-set vac[3].Output=MG-XU-1
+set vac[3].Output=MG-XU
 
 set vac[0].BitsPerSample=24
 set vac[1].BitsPerSample=24
@@ -119,14 +120,19 @@ set vac[1].SamplingRate=44100
 set vac[2].SamplingRate=44100
 set vac[3].SamplingRate=44100
 
+set vac[3].Priority=high
+
 echo.
 echo Repeating audio to headphones on device %vac[3].Output%...
-goto :gc
+echo Remember to change clock corr ratio to 99.9941 on Cable 4.
 
 
 :gc
 
+echo.
 echo Shutting down any active audio repeaters...
+echo.
+
 for /L %%i in (0, 1, 3) do call taskkill /fi "WindowTitle eq %%vac[%%i].WindowName%%" > nul
 
 if not defined vac[3].Output goto :end
@@ -150,4 +156,7 @@ for /L %%i in (0, 1, 3) do (
 
 :end
 
-timeout /t 5
+echo.
+echo COMPLETE.
+
+timeout /t 15
