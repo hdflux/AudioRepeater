@@ -31,64 +31,64 @@ set autoStart=/AutoStart
 
 set vac[0].WindowName=Audio Repeater - Line 1 - System Sounds
 set vac[0].Input=Virtual Cable 1
-set vac[0].ResyncAt=25
-set vac[0].OutputPreFill=60
+set vac[0].ResyncAt=20
+set vac[0].OutputPreFill=80
 set vac[0].Buffers=20
-set vac[0].BufferMs=200
+set vac[0].BufferMs=50
 set vac[0].PacketModeIn=off
 set vac[0].PacketModeOut=off
 set vac[0].VacClockMode=Input
-set vac[0].Priority=high
+set vac[0].Priority=normal
 set vac[0].Min=/min
 
 set vac[1].WindowName=Audio Repeater - Line 2 - Game
 set vac[1].Input=Virtual Cable 2
-set vac[1].ResyncAt=25
-set vac[1].OutputPreFill=60
+set vac[1].ResyncAt=20
+set vac[1].OutputPreFill=80
 set vac[1].Buffers=20
-set vac[1].BufferMs=200
+set vac[1].BufferMs=50
 set vac[1].PacketModeIn=off
 set vac[1].PacketModeOut=off
 set vac[1].VacClockMode=Input
-set vac[1].Priority=high
+set vac[1].Priority=normal
 set vac[1].Min=/min
 
 set vac[2].WindowName=Audio Repeater - Line 3 - Voice Chat
 set vac[2].Input=Virtual Cable 3
-set vac[2].ResyncAt=25
-set vac[2].OutputPreFill=60
+set vac[2].ResyncAt=20
+set vac[2].OutputPreFill=80
 set vac[2].Buffers=20
-set vac[2].BufferMs=200
+set vac[2].BufferMs=50
 set vac[2].PacketModeIn=off
 set vac[2].PacketModeOut=off
 set vac[2].VacClockMode=Input
-set vac[2].Priority=high
+set vac[2].Priority=normal
 set vac[2].Min=/min
 
 set vac[3].WindowName=Audio Repeater - Line 4 - Line To MGX10XU
 set vac[3].Input=Virtual Cable 4
 set vac[3].Output=MG-XU
-set vac[3].ResyncAt=25
-set vac[3].OutputPreFill=60
+set vac[3].ResyncAt=20
+set vac[3].OutputPreFill=80
 set vac[3].Buffers=20
-set vac[3].BufferMs=200
+set vac[3].BufferMs=50
 set vac[3].PacketModeIn=off
 set vac[3].PacketModeOut=off
 set vac[3].VacClockMode=Input
-set vac[3].Priority=high
+set vac[3].Priority=normal
 set vac[3].Min=/min
 
 set vac[4].WindowName=Audio Repeater - Line 5 - Line To Speakers
 set vac[4].Input=Virtual Cable 5
 set vac[4].Output=Realtek HD Audio Output
-set vac[4].ResyncAt=25
-set vac[4].OutputPreFill=60
+set vac[4].ResyncAt=20
+set vac[4].OutputPreFill=80
 set vac[4].Buffers=20
-set vac[4].BufferMs=200
+set vac[4].BufferMs=50
 set vac[4].PacketModeIn=off
 set vac[4].PacketModeOut=off
 set vac[4].VacClockMode=Input
-set vac[4].Priority=high
+set vac[4].Priority=normal
 set vac[4].Min=/min
 
 
@@ -97,7 +97,7 @@ echo 1. Speakers.
 echo 2. Headphones.
 echo 3. Close all instances of Audio Repeater.
 echo 4. Quit.
-choice /t 10 /c 1234 /n /d 1
+choice /t 15 /c 1234 /n /d 1
 
 if errorlevel 4 goto :end
 if errorlevel 3 goto :gc
@@ -112,7 +112,7 @@ set vac[1].Output=Virtual Cable 5
 set vac[2].Output=Virtual Cable 5
 
 set bitsPerSample=16
-set samplingRate=48000
+set samplingRate=96000
 set oi=4
 
 echo.
@@ -127,7 +127,7 @@ set vac[1].Output=Virtual Cable 4
 set vac[2].Output=Virtual Cable 4
 
 set bitsPerSample=24
-set samplingRate=48000
+set samplingRate=96000
 set oi=3
 
 echo.
@@ -142,7 +142,7 @@ echo.
 
 for /L %%i in (0, 1, 4) do call taskkill /fi "WindowTitle eq %%vac[%%i].WindowName%%" > nul
 
-if not defined oi (goto :end) else (timeout /t 10)
+if not defined oi (goto :end) else (timeout /t 15)
 
 
 :createinstances

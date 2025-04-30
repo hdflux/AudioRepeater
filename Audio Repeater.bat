@@ -1,54 +1,95 @@
 @echo off
 
-REM input[#]		/Input:<str>			Input (capture, recording) device name
-REM out				/Output:<str>			Output (playback, rendering) device name
-REM sr				/SamplingRate:<num>		Sampling rate (samples per second)
-REM bps				/BitsPerSample:<num>	Bits per sample
-REM ch				/Channels:<num>			Number of channels
-REM chcfg			/ChanCfg:<str>			Channel configuration
-REM bufferms		/BufferMs:<num>			Total buffering length in milliseconds
-REM bufferparts		/BufferParts:<num>		Number of buffers (parts of buffering space)
-REM 				/Priority:<str>			Process priority <normal | high>
-REM wn[#]			/WindowName:<str>		Name of application instance window
-REM 				/AutoStart				Start audio transfer automatically <blank | autostart>
-REM 				/CloseInstance:<str>	Close a specified Audio Repeater instance by its window name
+REM input[#]			/Input:<str>			Input (capture, recording) endpoint name
+REM output[#]			/Output:<str>			Output (playback, rendering) endpoint name
+REM samplingRate[#]		/SamplingRate:<num>		Sampling rate (samples per second)
+REM bitsPerSample[#]	/BitsPerSample:<num>	Bits per sample
+REM channels			/Channels:<num>			Number of channels
+REM chanCfg				/ChanCfg:<str>			Channel configuration
+REM bufferMs[#]			/BufferMs:<num>			Total buffering length in milliseconds
+REM buffers[#]			/BufferParts:<num>			Number of buffers (parts of buffering space)
+REM 					/Prefill:<percent>		Percent of each queue size to pre-fill before starting
+REM 					/ResyncAt:<percent>		Percent of each queue size to pause until pre-filled
+REM 					/VacClockMode:<mode>	VAC clock control mode (Off, Any, Input, Output)
+REM priority			/Priority:<str>			Process priority <normal | high>
+REM windowName[#]		/WindowName:<str>		Name of application instance window
+REM 					/AutoStart				Start audio transfer automatically <blank | autostart>
+REM 					/CloseInstance:<str>	Close a specified Audio Repeater instance by its window name
+REM 					/Config:<str>			Read options from the specified file.
 
-REM Smaller bufferms allows larger bufferparts.
-REM More bufferparts mean more accuracy in buffer but can create more overhead.
+REM Smaller bufferms allows larger buffers.
+REM More buffers mean more accuracy in buffer but can create more overhead.
 
-REM srcdir	-- Location of audiorepeater.exe.
-set srcdir=H:\Apps\Virtual Audio Cable
-set priority=high
-set ch=2
-set chcfg=stereo
-set autostart=/AutoStart
+REM srcdir	-- Location of audiorepeater_ks.exe.
 
-set wn[0]=Audio Repeater Line 1 System
-set input[0]=Line 1 (Virtual Audio Cable)
-set resync[0]=20
-set prefill[0]=50
-set bufferparts[0]=64
-set bufferms[0]=100
-set bps[0]=16
-set sr[0]=48000
 
-set wn[1]=Audio Repeater Line 2 Game
-set input[1]=Line 2 (Virtual Audio Cable)
-set resync[1]=20
-set prefill[1]=50
-set bufferparts[1]=64
-set bufferms[1]=100
-set bps[1]=16
-set sr[1]=48000
+set scriptDir=H:\Apps\Virtual Audio Cable
+set channels=2
+set chanCfg=stereo
+set autoStart=/AutoStart
 
-set wn[2]=Audio Repeater Line 3 Voice Chat
-set input[2]=Line 3 (Virtual Audio Cable)
-set resync[2]=20
-set prefill[2]=50
-set bufferparts[2]=64
-set bufferms[2]=100
-set bps[2]=16
-set sr[2]=48000
+
+set vac[0].WindowName=Audio Repeater - Line 1 - System Sounds
+set vac[0].Input=Virtual Cable 1
+set vac[0].ResyncAt=25
+set vac[0].OutputPreFill=60
+set vac[0].Buffers=20
+set vac[0].BufferMs=200
+set vac[0].PacketModeIn=off
+set vac[0].PacketModeOut=off
+set vac[0].VacClockMode=Input
+set vac[0].Priority=high
+set vac[0].Min=/min
+
+set vac[1].WindowName=Audio Repeater - Line 2 - Game
+set vac[1].Input=Virtual Cable 2
+set vac[1].ResyncAt=25
+set vac[1].OutputPreFill=60
+set vac[1].Buffers=20
+set vac[1].BufferMs=200
+set vac[1].PacketModeIn=off
+set vac[1].PacketModeOut=off
+set vac[1].VacClockMode=Input
+set vac[1].Priority=high
+set vac[1].Min=/min
+
+set vac[2].WindowName=Audio Repeater - Line 3 - Voice Chat
+set vac[2].Input=Virtual Cable 3
+set vac[2].ResyncAt=25
+set vac[2].OutputPreFill=60
+set vac[2].Buffers=20
+set vac[2].BufferMs=200
+set vac[2].PacketModeIn=off
+set vac[2].PacketModeOut=off
+set vac[2].VacClockMode=Input
+set vac[2].Priority=high
+set vac[2].Min=/min
+
+set vac[3].WindowName=Audio Repeater - Line 4 - Line To MGX10XU
+set vac[3].Input=Virtual Cable 4
+set vac[3].Output=MG-XU
+set vac[3].ResyncAt=25
+set vac[3].OutputPreFill=60
+set vac[3].Buffers=20
+set vac[3].BufferMs=200
+set vac[3].PacketModeIn=off
+set vac[3].PacketModeOut=off
+set vac[3].VacClockMode=Input
+set vac[3].Priority=high
+set vac[3].Min=/min
+
+set vac[4].WindowName=Audio Repeater - Line 5 - Line To Speakers
+set vac[4].Input=Virtual Cable 5
+set vac[4].Output=Realtek HD Audio Output
+set vac[4].ResyncAt=25
+set vac[4].OutputPreFill=60
+set vac[4].Buffers=20
+set vac[4].BufferMs=200
+set vac[4].PacketModeIn=off
+set vac[4].PacketModeOut=off
+set vac[4].VacClockMode=Input
+set vac[4].Priority=high
+set vac[4].Min=/min
 
 
 echo Set Audio Repeater to which device?
@@ -66,40 +107,77 @@ if errorlevel 1 goto :speakers
 
 :speakers
 
-set out=Speakers (Realtek High Definiti
+set vac[0].Output=Virtual Cable 5
+set vac[1].Output=Virtual Cable 5
+set vac[2].Output=Virtual Cable 5
+
+set bitsPerSample=16
+set samplingRate=48000
+set oi=4
+
 echo.
-echo Repeating audio to speakers on device %out%...
+echo Repeating audio to speakers on device %vac[3].Output%...
 goto :gc
 
 
 :headphones
 
-set out=Line (2- MG-XU)
+set vac[0].Output=Virtual Cable 4
+set vac[1].Output=Virtual Cable 4
+set vac[2].Output=Virtual Cable 4
+
+set bitsPerSample=24
+set samplingRate=48000
+set oi=3
+
 echo.
-echo Repeating audio to headphones on device %out%...
-goto :gc
+echo Repeating audio to headphones on device %vac[3].Output%...
 
 
 :gc
 
+echo.
 echo Shutting down any active audio repeaters...
-taskkill /fi "WindowTitle eq %wn[0]%" > nul
-taskkill /fi "WindowTitle eq %wn[1]%" > nul
-taskkill /fi "WindowTitle eq %wn[2]%" > nul
+echo.
 
-if not defined out goto :end
+for /L %%i in (0, 1, 4) do call taskkill /fi "WindowTitle eq %%vac[%%i].WindowName%%" > nul
+
+if not defined oi (goto :end) else (timeout /t 10)
 
 
 :createinstances
 
-start /min "%wn[0]%" "%srcdir%\audiorepeater.exe" /Input: "%input[0]%" /Output: "%out%" /SamplingRate:%sr[0]% /BitsPerSample:%bps[0]% /Channels:%ch% /BufferMs:%bufferms[0]% /BufferParts:%bufferparts[0]% /Prefill:%prefill[0]% /ResyncAt:%resync[0]% /Priority:%priority% /ChanCfg:%chcfg% /WindowName:"%wn[0]%" %autostart%
-echo Audio Repeater created for %wn[0]%.
-start /min "%wn[1]%" "%srcdir%\audiorepeater.exe" /Input: "%input[1]%" /Output: "%out%" /SamplingRate:%sr[1]% /BitsPerSample:%bps[1]% /Channels:%ch% /BufferMs:%bufferms[1]% /BufferParts:%bufferparts[1]% /Prefill:%prefill[1]% /ResyncAt:%resync[1]% /Priority:%priority% /ChanCfg:%chcfg% /WindowName:"%wn[1]%" %autostart%
-echo Audio Repeater created for %wn[1]%.
-start /min "%wn[2]%" "%srcdir%\audiorepeater.exe" /Input: "%input[2]%" /Output: "%out%" /SamplingRate:%sr[2]% /BitsPerSample:%bps[2]% /Channels:%ch% /BufferMs:%bufferms[2]% /BufferParts:%bufferparts[2]% /Prefill:%prefill[2]% /ResyncAt:%resync[2]% /Priority:%priority% /ChanCfg:%chcfg% /WindowName:"%wn[2]%" %autostart%
-echo Audio Repeater created for %wn[2]%.
+for /L %%i in (0, 1, 2) do (
+	call start %%vac[%%i].Min%% "%%vac[%%i].WindowName%%" "%%scriptDir%%\audiorepeater.exe"^
+	 /Input:"%%vac[%%i].Input%%" /Output:"%%vac[%%i].Output%%"^
+	 /SamplingRate:%%samplingRate%% /BitsPerSample:%%bitsPerSample%%^
+	 /Channels:%%channels%% /ChanCfg:%%chanCfg%%^
+	 /BufferMs:%%vac[%%i].BufferMs%% /Buffers:%%vac[%%i].Buffers%%^
+	 /ResyncAt:%%vac[%%i].ResyncAt%% /OutputPreFill:%%vac[%%i].OutputPreFill%%^
+	 /PacketModeIn:%%vac[%%i].PacketModeIn%% /PacketModeOut:%%vac[%%i].PacketModeOut%%^
+	 /VacClockMode:%%vac[%%i].VacClockMode%%^
+	 /WindowName:"%%vac[%%i].WindowName%%"^
+	 /Priority:%%vac[%%i].Priority%% %%autoStart%%
+	call echo Audio Repeater created for %%vac[%%i].WindowName%%.
+)
+
+call start %%vac[%oi%].Min%% "%%vac[%oi%].WindowName%%" "%scriptDir%\audiorepeater.exe"^
+ /Input:"%%vac[%oi%].Input%%" /Output:"%%vac[%oi%].Output%%"^
+ /SamplingRate:%samplingRate% /BitsPerSample:%bitsPerSample%^
+ /Channels:%channels% /ChanCfg:%chanCfg%^
+ /BufferMs:%%vac[%oi%].BufferMs%% /Buffers:%%vac[%oi%].Buffers%%^
+ /ResyncAt:%%vac[%oi%].ResyncAt%% /OutputPreFill:%%vac[%oi%].OutputPreFill%%^
+ /PacketModeIn:%%vac[%oi%].PacketModeIn%% /PacketModeOut:%%vac[%oi%].PacketModeOut%%^
+ /VacClockMode:%%vac[%oi%].VacClockMode%%^
+ /WindowName:"%%vac[%oi%].WindowName%%"^
+ /Priority:%%vac[%oi%].Priority%% %autoStart%
+	
+call echo Audio Repeater created for %%vac[%oi%].WindowName%%.
 
 
 :end
 
-timeout /t 5
+echo.
+echo COMPLETE.
+
+timeout /t 10
