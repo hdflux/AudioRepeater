@@ -1,183 +1,136 @@
 @echo off
+setlocal enabledelayedexpansion
 
-REM input[#]			/Input:<str>			Input (capture, recording) endpoint name
-REM output[#]			/Output:<str>			Output (playback, rendering) endpoint name
-REM samplingRate[#]		/SamplingRate:<num>		Sampling rate (samples per second)
-REM bitsPerSample[#]	/BitsPerSample:<num>	Bits per sample
-REM channels			/Channels:<num>			Number of channels
-REM chanCfg				/ChanCfg:<str>			Channel configuration
-REM bufferMs[#]			/BufferMs:<num>			Total buffering length in milliseconds
-REM buffers[#]			/BufferParts:<num>			Number of buffers (parts of buffering space)
-REM 					/Prefill:<percent>		Percent of each queue size to pre-fill before starting
-REM 					/ResyncAt:<percent>		Percent of each queue size to pause until pre-filled
-REM 					/VacClockMode:<mode>	VAC clock control mode (Off, Any, Input, Output)
-REM priority			/Priority:<str>			Process priority <normal | high>
-REM windowName[#]		/WindowName:<str>		Name of application instance window
-REM 					/AutoStart				Start audio transfer automatically <blank | autostart>
-REM 					/CloseInstance:<str>	Close a specified Audio Repeater instance by its window name
-REM 					/Config:<str>			Read options from the specified file.
+:: input[#]			/Input:<str>			Input (capture, recording) endpoint name
+:: output[#]			/Output:<str>			Output (playback, rendering) endpoint name
+:: samplingRate[#]		/SamplingRate:<num>		Sampling rate (samples per second)
+:: bitsPerSample[#]	/BitsPerSample:<num>	Bits per sample
+:: channels			/Channels:<num>			Number of channels
+:: chanCfg				/ChanCfg:<str>			Channel configuration
+:: bufferMs[#]			/BufferMs:<num>			Total buffering length in milliseconds
+:: buffers[#]			/BufferParts:<num>			Number of buffers (parts of buffering space)
+:: 					/Prefill:<percent>		Percent of each queue size to pre-fill before starting
+:: 					/ResyncAt:<percent>		Percent of each queue size to pause until pre-filled
+:: 					/VacClockMode:<mode>	VAC clock control mode (Off, Any, Input, Output)
+:: priority			/Priority:<str>			Process priority <normal | high>
+:: windowName[#]		/WindowName:<str>		Name of application instance window
+:: 					/AutoStart				Start audio transfer automatically <blank | autostart>
+:: 					/CloseInstance:<str>	Close a specified Audio Repeater instance by its window name
+:: 					/Config:<str>			Read options from the specified file.
 
-REM Smaller bufferms allows larger buffers.
-REM More buffers mean more accuracy in buffer but can create more overhead.
+:: Smaller bufferms allows larger buffers.
+:: More buffers mean more accuracy in buffer but can create more overhead.
 
-REM srcdir	-- Location of audiorepeater_ks.exe.
-
-
-set scriptDir=H:\Apps\Virtual Audio Cable
-set channels=2
-set chanCfg=stereo
-set autoStart=/AutoStart
+:: srcdir	-- Location of audiorepeater_ks.exe.
 
 
-set vac[0].WindowName=Audio Repeater - Line 1 - System Sounds
-set vac[0].Input=Virtual Cable 1
-set vac[0].ResyncAt=20
-set vac[0].OutputPreFill=80
-set vac[0].Buffers=20
-set vac[0].BufferMs=50
-set vac[0].PacketModeIn=off
-set vac[0].PacketModeOut=off
-set vac[0].VacClockMode=Input
-set vac[0].Priority=normal
-set vac[0].Min=/min
+set "appDir=D:\OneDrive\Documents\GitHub\AudioRepeater"
+set "configDir=D:\OneDrive\Documents\GitHub\AudioRepeater\configs"
 
-set vac[1].WindowName=Audio Repeater - Line 2 - Game
-set vac[1].Input=Virtual Cable 2
-set vac[1].ResyncAt=20
-set vac[1].OutputPreFill=80
-set vac[1].Buffers=20
-set vac[1].BufferMs=50
-set vac[1].PacketModeIn=off
-set vac[1].PacketModeOut=off
-set vac[1].VacClockMode=Input
-set vac[1].Priority=normal
-set vac[1].Min=/min
+:: Runtime control flags.
+set vacCount=4
+set interval=3
 
-set vac[2].WindowName=Audio Repeater - Line 3 - Voice Chat
-set vac[2].Input=Virtual Cable 3
-set vac[2].ResyncAt=20
-set vac[2].OutputPreFill=80
-set vac[2].Buffers=20
-set vac[2].BufferMs=50
-set vac[2].PacketModeIn=off
-set vac[2].PacketModeOut=off
-set vac[2].VacClockMode=Input
-set vac[2].Priority=normal
-set vac[2].Min=/min
+:: Audio Repeater Window Names.
+set "vac0_WindowName=ARKS-L1-System"
+set "vac1_WindowName=ARKS-L2-Game"
+set "vac2_WindowName=ARKS-L3-Voice"
+set "vac3_WindowName=ARKS-L4-Playback"
 
-set vac[3].WindowName=Audio Repeater - Line 4 - Line To MGX10XU
-set vac[3].Input=Virtual Cable 4
-set vac[3].Output=MG-XU
-set vac[3].ResyncAt=20
-set vac[3].OutputPreFill=80
-set vac[3].Buffers=20
-set vac[3].BufferMs=50
-set vac[3].PacketModeIn=off
-set vac[3].PacketModeOut=off
-set vac[3].VacClockMode=Input
-set vac[3].Priority=normal
-set vac[3].Min=/min
+:: Audio Repeater Config Files.
+set "vac0_Config=Line1-System.cfg"
+set "vac1_Config=Line2-Game.cfg"
+set "vac2_Config=Line3-Voice.cfg"
+set "vac3_Config=Line4-Playback.cfg"
 
-set vac[4].WindowName=Audio Repeater - Line 5 - Line To Speakers
-set vac[4].Input=Virtual Cable 5
-set vac[4].Output=Realtek HD Audio Output
-set vac[4].ResyncAt=20
-set vac[4].OutputPreFill=80
-set vac[4].Buffers=20
-set vac[4].BufferMs=50
-set vac[4].PacketModeIn=off
-set vac[4].PacketModeOut=off
-set vac[4].VacClockMode=Input
-set vac[4].Priority=normal
-set vac[4].Min=/min
+:: Audio Repeater Min state.
+set "vac0_Min=/min"
+set "vac1_Min=/min"
+set "vac2_Min=/min"
+set "vac3_Min="
+
+:: Audio Repeater AutoStart state.
+set "vac0_AutoStart=/AutoStart"
+set "vac1_AutoStart=/AutoStart"
+set "vac2_AutoStart=/AutoStart"
+set "vac3_AutoStart="
 
 
-echo Set Audio Repeater to which device?
+echo [96mSet Audio Repeater to which device?[0m
 echo 1. Speakers.
-echo 2. Headphones.
+echo 2. Yamaha MG10XU.
 echo 3. Close all instances of Audio Repeater.
 echo 4. Quit.
 choice /t 15 /c 1234 /n /d 1
 
 if errorlevel 4 goto :end
 if errorlevel 3 goto :gc
-if errorlevel 2 goto :headphones
+if errorlevel 2 goto :mixer
 if errorlevel 1 goto :speakers
 
 
 :speakers
 
-set vac[0].Output=Virtual Cable 5
-set vac[1].Output=Virtual Cable 5
-set vac[2].Output=Virtual Cable 5
-
-set bitsPerSample=16
-set samplingRate=96000
-set oi=4
+set "playbackDir=Speakers"
 
 echo.
-echo Repeating audio to speakers on device %vac[3].Output%...
+echo [96mConfiguring audio repeaters to speakers.[0m
+
 goto :gc
 
 
-:headphones
+:mixer
 
-set vac[0].Output=Virtual Cable 4
-set vac[1].Output=Virtual Cable 4
-set vac[2].Output=Virtual Cable 4
-
-set bitsPerSample=24
-set samplingRate=96000
-set oi=3
+set "playbackDir=Mixer"
+set "vac3_Min=/min"
+set "vac3_AutoStart=/AutoStart"
 
 echo.
-echo Repeating audio to headphones on device %vac[3].Output%...
+echo [96mConfiguring audio repeaters to Yamaha MG10XU.[0m
 
 
 :gc
 
 echo.
-echo Shutting down any active audio repeaters...
+echo [96mScanning for and closing existing Audio Repeater instances...[0m
 echo.
 
-for /L %%i in (0, 1, 4) do call taskkill /fi "WindowTitle eq %%vac[%%i].WindowName%%" > nul
+:: Loop through known Audio Repeater instances
+set /a lastIndex=vacCount - 1
+for /L %%i in (0,1,!lastIndex!) do (
+	taskkill /fi "WINDOWTITLE eq !vac%%i_WindowName!" /f >nul 2>&1
+)
 
-if not defined oi (goto :end) else (timeout /t 15)
+:: Wait if any were closed
+timeout /t %interval% /nobreak >nul
+
+:: Goto End if no audio repeaters are flagged for creation.
+if not defined playbackDir (
+    echo [91mNo device selected. Skipping instance creation.[0m
+    goto :end
+)
+
+goto :createinstances
 
 
 :createinstances
 
-for /L %%i in (0, 1, 2) do (
-	call start %%vac[%%i].Min%% "%%vac[%%i].WindowName%%" "%%scriptDir%%\audiorepeater_ks.exe"^
-	 /Input:"%%vac[%%i].Input%%" /Output:"%%vac[%%i].Output%%"^
-	 /SamplingRate:%%samplingRate%% /BitsPerSample:%%bitsPerSample%%^
-	 /Channels:%%channels%% /ChanCfg:%%chanCfg%%^
-	 /BufferMs:%%vac[%%i].BufferMs%% /Buffers:%%vac[%%i].Buffers%%^
-	 /ResyncAt:%%vac[%%i].ResyncAt%% /OutputPreFill:%%vac[%%i].OutputPreFill%%^
-	 /PacketModeIn:%%vac[%%i].PacketModeIn%% /PacketModeOut:%%vac[%%i].PacketModeOut%%^
-	 /VacClockMode:%%vac[%%i].VacClockMode%%^
-	 /WindowName:"%%vac[%%i].WindowName%%"^
-	 /Priority:%%vac[%%i].Priority%% %%autoStart%%
-	call echo Audio Repeater created for %%vac[%%i].WindowName%%.
+set /a lastIndex=vacCount - 1
+for /L %%i in (0,1,!lastIndex!) do (
+    set "cfgFile=!configDir!\!playbackDir!\!vac%%i_Config!"
+	
+    if exist "!cfgFile!" (
+		call start "!vac%%i_WindowName!" !vac%%i_Min! "!appDir!\audiorepeater_ks.exe" /Config:"!cfgFile!" /WindowName:"!vac%%i_WindowName!" !vac%%i_AutoStart!
+		call echo [92mAudio Repeater created for !vac%%i_WindowName!.[0m
+    ) else (
+        echo [91mConfig file missing: !cfgFile!. Skipping instance.[0m
+    )
 )
 
-call start %%vac[%oi%].Min%% "%%vac[%oi%].WindowName%%" "%scriptDir%\audiorepeater_ks.exe"^
- /Input:"%%vac[%oi%].Input%%" /Output:"%%vac[%oi%].Output%%"^
- /SamplingRate:%samplingRate% /BitsPerSample:%bitsPerSample%^
- /Channels:%channels% /ChanCfg:%chanCfg%^
- /BufferMs:%%vac[%oi%].BufferMs%% /Buffers:%%vac[%oi%].Buffers%%^
- /ResyncAt:%%vac[%oi%].ResyncAt%% /OutputPreFill:%%vac[%oi%].OutputPreFill%%^
- /PacketModeIn:%%vac[%oi%].PacketModeIn%% /PacketModeOut:%%vac[%oi%].PacketModeOut%%^
- /VacClockMode:%%vac[%oi%].VacClockMode%%^
- /WindowName:"%%vac[%oi%].WindowName%%"^
- /Priority:%%vac[%oi%].Priority%% %autoStart%
-	
-call echo Audio Repeater created for %%vac[%oi%].WindowName%%.
 
 
 :end
 
 echo.
-echo COMPLETE.
-
-timeout /t 10
+echo [92mCOMPLETE.[0m
+timeout /t 15
