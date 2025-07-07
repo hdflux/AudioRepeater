@@ -11,7 +11,7 @@ This application was developed to automate the process of switching between two 
 <img width="740" alt="2025-07-07" src="https://github.com/user-attachments/assets/4e0f4ade-89ac-4dcb-b854-e7157aa60322" />
 
 ### Audio Repeater (Kernel Streaming)
-<img width="635" alt="2025-07-07 (2)" src="https://github.com/user-attachments/assets/22e1a44a-2317-489d-b639-4b3a237708cd" />
+<img width="635" alt="2025-07-07 (3)" src="https://github.com/user-attachments/assets/ac1dcab8-aca8-4251-ba1c-436bf90185b2" />
 
 ## What is planned?
 1. I would like to further empower the user with configuration options such that they never have to modify the _audio repeater ks.bat_ file by having all user input done in config files. The framework code should never be touched by the end user.
