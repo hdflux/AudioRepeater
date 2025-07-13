@@ -1,5 +1,5 @@
 @echo off
-setlocal enabledelayedexpansion
+setlocal EnableDelayedExpansion
 
 cd /d "%~dp0"
 
@@ -39,9 +39,14 @@ echo [96mScanning for and closing existing Audio Repeater instances...[0m
 :: Loop through known Audio Repeater instances
 set /a lastIndex=vacCount - 1
 for /L %%i in (0,1,!lastIndex!) do (
-	::audiorepeater_ks.exe /CloseInstance:"!vac%%i_WindowName!"	:: Will work in a future release of audiorepeater_ks.exe.
-	taskkill /FI "WINDOWTITLE eq !vac%%i_WindowName!" /F >nul 2>&1
+	set "vacWindowName=!vac%%i_WindowName!"
+	tasklist /FI "WINDOWTITLE eq !vacWindowName!" | find /I "audiorepeater_ks.exe" >nul
+	if not errorlevel 1 (
+		audiorepeater_ks.exe /CloseInstance:"!vacWindowName!"
+		REM taskkill /FI "WINDOWTITLE eq !vac%%i_WindowName!" /F >nul 2>&1
+	)
 )
+
 
 :: Wait if any were closed
 timeout /t %interval% /nobreak >nul
@@ -59,11 +64,15 @@ goto :createinstances
 
 set /a lastIndex=vacCount - 1
 for /L %%i in (0,1,!lastIndex!) do (
-    set "cfgFile=configs\!playbackDir!\!vac%%i_Config!"
+	set "vacConfig=!vac%%i_Config!"
+    set "cfgFile=configs\!playbackDir!\!vacConfig!"
+	set "vacWindowName=!vac%%i_WindowName!"
+	set "vacMin=!vac%%i_Min!"
+	set "vacAutoStart=!vac%%i_AutoStart!"
 	
     if exist "!cfgFile!" (
-		call start "!vac%%i_WindowName!" !vac%%i_Min! "audiorepeater_ks.exe" /Config:"!cfgFile!" /WindowName:"!vac%%i_WindowName!" !vac%%i_AutoStart!
-		call echo [92mAudio Repeater created for !vac%%i_WindowName!.[0m
+		call start "!vacWindowName!" !vacMin! "audiorepeater_ks.exe" /Config:"!cfgFile!" /WindowName:"!vacWindowName!" !vacAutoStart!
+		call echo [92mAudio Repeater created for !vacWindowName!.[0m
     ) else (
         echo [91mConfig file missing: !cfgFile!. Skipping instance.[0m
     )
